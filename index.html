@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuickBooks Desktop Help Center</title>
+  <style>
+
+/* PDF modal styles */
+.modal-backdrop{
+  position: fixed; inset:0; background: rgba(0,0,0,.6); display:none;
+  align-items:center; justify-content:center; padding: 20px; z-index: 9999;
+}
+.modal-backdrop.show{ display:flex; }
+.modal{
+  width:min(1000px, 96vw); height:min(90vh, 900px); background: var(--card);
+  border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  display:flex; flex-direction:column; overflow:hidden; border:1px solid var(--border);
+}
+.modal-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 14px 16px; background: linear-gradient(180deg, rgba(22,163,74,.12), transparent);
+  border-bottom:1px solid var(--border);
+}
+.modal-actions{
+  display:flex; gap:8px; padding: 8px 16px; border-bottom:1px solid var(--border);
+}
+.modal-body{ flex:1; background:#0b1220; }
+#pdfFrame{
+  width:100%; height:100%; border:0; background:#0b1220;
+}
+
+    :root{
+      --bg:#071a14;
+      --panel:#0e2a21;
+      --panel-2:#0a241c;
+      --text:#e9fff6;
+      --muted:#a7d8c4;
+      --accent:#29d27d;
+      --accent-2:#6ff0b2;
+      --warn:#ffd36a;
+      --danger:#ff8c8c;
+      --border:rgba(255,255,255,.10);
+      --radius:14px;
+      font-synthesis: style;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 10% -10%, #0f5a3d 0%, transparent 60%),
+                  radial-gradient(900px 600px at 110% 10%, #0b6b57 0%, transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background:rgba(11,16,32,.9); backdrop-filter: blur(8px);
+      border-bottom:1px solid var(--border);
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:18px 18px;}
+    .topbar{
+      display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px;
+    }
+    .brand .logo{
+      width:36px; height:36px; border-radius:9px;
+      background: conic-gradient(from 120deg, var(--accent), var(--accent-2), #b98bff, var(--accent));
+      box-shadow:0 0 25px rgba(41,210,125,.35);
+    }
+    .search{
+      flex:1; min-width:220px; position:relative;
+    }
+    .search input{
+      width:100%; padding:12px 40px 12px 12px; border-radius:999px;
+      border:1px solid var(--border); background:var(--panel);
+      color:var(--text); outline:none;
+    }
+    .search .k{
+      position:absolute; right:10px; top:50%; transform:translateY(-50%);
+      font-size:12px; color:var(--muted); border:1px solid var(--border);
+      padding:2px 6px; border-radius:6px;
+    }
+
+    .grid{
+      display:grid; gap:14px;
+      grid-template-columns: 1.2fr .8fr;
+    }
+    @media (max-width: 950px){
+      .grid{grid-template-columns: 1fr;}
+    }
+    .card{
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border:1px solid var(--border); border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      overflow:hidden;
+    }
+    .card h2{
+      margin:0; font-size:18px; padding:14px 16px; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      background: rgba(255,255,255,.02);
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .card .body{padding:14px 16px;}
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border-radius:999px; border:1px solid var(--border);
+      background:rgba(255,255,255,.03); color:var(--text); font-size:13px;
+      text-decoration:none;
+    }
+    .pill:hover{border-color: rgba(41,210,125,.6); transform:translateY(-1px)}
+    .pill small{color:var(--muted); font-weight:600}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+      background: linear-gradient(180deg, #134634, #0f3b2b);
+      color:var(--text); font-weight:600; cursor:pointer; text-decoration:none;
+    }
+    .btn:hover{border-color: rgba(126,240,193,.7)}
+    .btn.warn:hover{border-color: rgba(255,211,106,.8)}
+    .btn.danger:hover{border-color: rgba(255,140,140,.8)}
+    .list{display:grid; gap:8px;}
+    .list a{justify-content:space-between}
+    .muted{color:var(--muted)}
+    .note{
+      background:rgba(41,210,125,.08); border:1px dashed rgba(41,210,125,.45);
+      padding:10px 12px; border-radius:10px; font-size:14px;
+    }
+    .note.warn{
+      background:rgba(255,211,106,.08); border-color:rgba(255,211,106,.55);
+    }
+    iframe{
+      width:100%; height:520px; border:0; background:#fff; border-radius:12px;
+    }
+    .iframe-wrap{padding:12px; background:#0c1228;}
+    .iframe-fallback{
+      display:none; padding:10px 12px; border-top:1px solid var(--border);
+      background: rgba(255,140,140,.08);
+    }
+    details{
+      border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,.02);
+      padding:6px 10px;
+    }
+    details summary{
+      cursor:pointer; list-style:none; font-weight:700; padding:8px 2px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
+    details summary::-webkit-details-marker{display:none}
+    details .content{
+      padding:8px 0 10px 0; color:var(--text); font-size:14px; line-height:1.5;
+      border-top:1px dashed var(--border);
+    }
+    code.inline{
+      background: rgba(255,255,255,.06); padding:2px 5px; border-radius:6px;
+      border:1px solid var(--border); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12.5px;
+    }
+    footer{padding:26px 18px; color:var(--muted); font-size:13px;}
+    .tag{font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.2px; text-transform:uppercase;}
+    .two-col{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+    @media (max-width: 650px){.two-col{grid-template-columns:1fr;}}
+
+    /* Version picker */
+    .version-picker{
+      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+      padding:8px 0;
+    }
+    select{
+      background:var(--panel); color:var(--text); border:1px solid var(--border);
+      padding:8px 10px; border-radius:10px; outline:none; font-weight:600;
+    }
+    .chip{
+      font-size:12px; padding:3px 8px; border-radius:999px; border:1px solid var(--border);
+      background:rgba(126,240,193,.08); color:#dff7ec; font-weight:700;
+      letter-spacing:.2px;
+    }
+    .dim{opacity:.5}
+    .hidden{display:none !important}
+    .badge{
+      font-size:11px; padding:2px 6px; border-radius:6px; border:1px solid var(--border);
+      color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.3px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          QuickBooks Desktop Help Center<br/>
+          <span class="muted" style="font-weight:500; font-size:12px;">Downloads • Fixes • How-tos • Error Codes</span>
+        </div>
+      </div>
+
+      <div class="search">
+        <input id="searchInput" type="search" placeholder="Search this help page (ex: H202, 3371, QBW.INI, rebuild data)"/>
+        <div class="k">Ctrl / ⌘ + K</div>
+      </div>
+
+      <a class="pill" href="#downloads"><small>Go to</small> Downloads</a>
+      <a class="pill" href="#toolhub"><small>Go to</small> Tools</a>
+      <a class="pill" href="#guides"><small>Go to</small> Guides</a>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding-top:14px;">
+    <div class="grid">
+
+      <!-- LEFT COLUMN -->
+      <section class="card" id="downloads">
+        <h2>
+          QuickBooks Desktop Downloads & Updates
+          <div style="display:flex; gap:8px;">
+            <a class="btn" target="_blank"
+              href="https://downloads.quickbooks.com/app/qbdt/products"
+              rel="noopener">Open in New Tab</a>
+          </div>
+        </h2>
+
+        <div class="iframe-wrap">
+          <iframe id="qbDownloadsIframe"
+            src="https://downloads.quickbooks.com/app/qbdt/products"
+            title="QuickBooks Desktop Downloads">
+          </iframe>
+        </div>
+
+        <div class="iframe-fallback" id="iframeFallback">
+          Looks like your browser blocked the embedded downloads page.
+          Please use the “Open in New Tab” button above.
+        </div>
+
+        <div class="body">
+          <div class="note">
+            Use this page to download or reinstall your licensed QuickBooks Desktop version.
+            If the embed is blocked, the New Tab button will always work.
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN -->
+      <aside class="list" style="align-content:start;">
+
+        <section class="card" id="toolhub">
+          <h2>Essential Tools & Utilities</h2>
+          <div class="body list">
+            <div style="display:grid; gap:8px;">
+            <!-- Safe official page button -->
+            <a class="btn" target="_blank" rel="noopener"
+               href="https://quickbooks.intuit.com/learn-support/en-us/install/quickbooks-tool-hub/00/1544247">
+              Download QuickBooks Tool Hub
+              <span class="muted">official page</span>
+            </a>
+
+            <!-- “Direct” workflow button (still official, always current) -->
+            <a class="btn" id="toolHubDirectBtn" target="_blank" rel="noopener"
+               href="https://quickbooks.intuit.com/learn-support/en-us/install/quickbooks-tool-hub/00/1544247"
+               title="Will try to use a direct installer link if available; otherwise opens the official page.">
+              Direct Download (Official)
+              <span class="muted">latest .exe</span>
+            </a>
+          </div>
+            <div class="muted" style="font-size:13px;">
+              Tool Hub includes File Doctor, network fixes, install repair, PDF/print tools, and more.
+            </div>
+
+            <a class="btn warn" target="_blank" rel="noopener"
+               href="https://quickbooks.intuit.com/learn-support/en-us/help-article/damaged-data/fix-company-file-network-issues-quickbooks-file/L9ZWWVewC_US_en_US">
+              QuickBooks File Doctor Guide
+              <span class="muted">how to use</span>
+            </a>
+
+            <a class="btn" target="_blank" rel="noopener"
+               href="https://quickbooks.intuit.com/learn-support/en-us/help-article/install-products/install-quickbooks-desktop/L3Fpsoqvj_US_en_US">
+              Install / Reinstall QuickBooks Desktop
+            </a>
+
+            <a class="btn" target="_blank" rel="noopener"
+               href="https://quickbooks.intuit.com/learn-support/en-us/help-article/product-delivery/download-quickbooks-desktop/L0TkDC77z_US_en_US">
+              Download Help (Find your version)
+            </a>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Quick Navigation</h2>
+          <div class="body two-col">
+            <a class="pill" href="#tech-toolkit">Tech Toolkit</a>
+            <a class="pill" href="#logs">Logs & Paths</a>
+            <a class="pill" href="#clean-install">Clean Install</a>
+            <a class="pill" href="#web-connector">Web Connector</a>
+            <a class="pill" href="#shortcuts">Shortcut Cheat Sheet</a>
+        
+            <a class="pill" href="#version">Version Picker</a>
+            <a class="pill" href="#known-codes">Known Error Codes</a>
+            <a class="pill" href="#common-issues">Common Issues</a>
+            <a class="pill" href="#multiuser">Multi-User Fixes</a>
+            <a class="pill" href="#inis">INI / Config Files</a>
+            <a class="pill" href="#backup">Backup / Restore</a>
+          </div>
+        </section>
+
+      </aside>
+    </div>
+
+    <!-- VERSION PICKER -->
+    <section class="card" id="version" style="margin-top:14px;">
+      <h2>
+        Version Picker
+        <span class="badge">filters tips</span>
+      </h2>
+      <div class="body">
+        <div class="version-picker">
+          <label for="versionSelect" class="muted" style="font-weight:700;">QuickBooks Year:</label>
+          <select id="versionSelect">
+            <option value="all">All Versions</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020</option>
+            <option value="older">2019 & Older</option>
+          </select>
+          <span id="versionChip" class="chip">Showing: All Versions</span>
+        </div>
+
+        <div id="versionNotes" class="note">
+          Select a year to highlight relevant fixes (hosting, .NET/MSXML, Tool Hub compatibility, etc.).
+        </div>
+      </div>
+    </section>
+
+    <!-- KNOWN ERROR CODES -->
+    <section class="card" id="known-codes" style="margin-top:14px;">
+      <h2>Known Error Codes: Meaning & Fix</h2>
+      <div class="body list">
+
+        <details class="filterable" data-version="all 2020 2021 2022 2023 2024 older">
+          <summary>Error H202 / H505 (Multi-User Hosting / Network)</summary>
+          <div class="content">
+            <p><b>Meaning:</b> Workstation can’t reach the QB database server or hosting is misconfigured.</p>
+            <p><b>Fix:</b></p>
+            <ol>
+              <li>Tool Hub → <b>Network Issues</b> → run <b>Database Server Manager</b>.</li>
+              <li>On server: <b>Host Multi-User Access</b> = ON.</li>
+              <li>On workstations: <b>Stop Hosting</b> = ON (they should NOT host).</li>
+              <li>Confirm firewall ports for your year are open and QB services are running.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all 2020 2021 2022 2023 2024 older">
+          <summary>Error 3371 (License / Entitlement / Store)</summary>
+          <div class="content">
+            <p><b>Meaning:</b> QB can’t load license data or entitlement, often after reinstall or Windows changes.</p>
+            <p><b>Fix:</b></p>
+            <ol>
+              <li>Close QB.</li>
+              <li>Tool Hub → <b>Installation Issues</b> → run <b>Install Diagnostic Tool</b>.</li>
+              <li>Rename entitlement folder (do not delete):<br/>
+                <code class="inline">C:\ProgramData\Intuit\Entitlement Client\v8</code>
+              </li>
+              <li>Reopen QB and re-register.</li>
+            </ol>
+            <div class="note warn">Always back up company files before entitlement edits.</div>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all 2020 2021 2022 2023 2024 older">
+          <summary>Error -6000, -6123 (Company File Damage / Access)</summary>
+          <div class="content">
+            <p><b>Meaning:</b> File is damaged, mismatched .ND/.TLG, or blocked by permissions/network.</p>
+            <p><b>Fix:</b></p>
+            <ol>
+              <li>Tool Hub → <b>Company File Issues</b> → <b>Quick Fix my File</b>.</li>
+              <li>Run <b>File Doctor</b> if still failing.</li>
+              <li>Move file local to test, then restore to server share.</li>
+              <li>Rename the .ND and .TLG files next to the company file and retry.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all 2020 2021 2022 2023 2024 older">
+          <summary>Error C=47 / C=343 (Data integrity / rebuild needed)</summary>
+          <div class="content">
+            <p><b>Meaning:</b> Corrupted lists/transactions or index errors inside the company file.</p>
+            <p><b>Fix:</b></p>
+            <ol>
+              <li>File → Utilities → <b>Verify Data</b>.</li>
+              <li>If errors appear: File → Utilities → <b>Rebuild Data</b>.</li>
+              <li>Re-verify. If still failing, restore last known-good backup.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all 2021 2022 2023 2024">
+          <summary>Error 1904 (Install failure / .NET / MSXML)</summary>
+          <div class="content">
+            <p><b>Meaning:</b> Windows components required by QB aren’t registering properly.</p>
+            <p><b>Fix:</b></p>
+            <ol>
+              <li>Tool Hub → <b>Installation Issues</b> → <b>Install Diagnostic Tool</b>.</li>
+              <li>Reboot.</li>
+              <li>If still failing, repair <b>.NET Framework</b> and <b>MSXML</b> in Windows Features.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Error 80029c4a (DLL / Program components)</summary>
+          <div class="content">
+            <p><b>Meaning:</b> QB program files/DLLs are missing or blocked (often AV related).</p>
+            <p><b>Fix:</b></p>
+            <ol>
+              <li>Tool Hub → <b>Program Problems</b> → <b>Quick Fix my Program</b>.</li>
+              <li>Update QB to latest release.</li>
+              <li>If needed, reinstall QB with AV temporarily disabled.</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Add more errors below by copying a <details> block -->
+      </div>
+    </section>
+
+    <!-- COMMON ISSUES -->
+    <section class="card" id="common-issues" style="margin-top:14px;">
+      <h2>Common Issues & Quick Fixes</h2>
+      <div class="body list">
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>QuickBooks won’t open / freezes on splash screen</summary>
+          <div class="content">
+            <ol>
+              <li>Tool Hub → <b>Program Problems</b> → <b>Quick Fix my Program</b>.</li>
+              <li>Hold <b>Ctrl</b> while opening QB to force “No Company Open”.</li>
+              <li>Rename <code class="inline">QBWUSER.INI</code> and <code class="inline">Entitlement Client</code> (if license loop).</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all 2020 2021 2022 2023 2024 older">
+          <summary>“Company file is on another computer” but it isn’t</summary>
+          <div class="content">
+            <ul>
+              <li>Open the file locally to confirm it works.</li>
+              <li>Delete/rename the .ND file and re-scan via Database Server Manager.</li>
+              <li>Confirm share permissions: Full Control for QB users on server folder.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all 2020 2021 2022 2023 2024 older">
+          <summary>Payroll or updates failing</summary>
+          <div class="content">
+            <ol>
+              <li>Help → Update QB Desktop → <b>Reset Update</b> then <b>Get Updates</b>.</li>
+              <li>Confirm Windows time/date correct.</li>
+              <li>Tool Hub → Installation Issues → <b>Install Diagnostic Tool</b>.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all 2023 2024">
+          <summary>Tool Hub install fails or won’t run</summary>
+          <div class="content">
+            <ul>
+              <li>Install as Admin.</li>
+              <li>Disable SmartScreen temporarily if blocking.</li>
+              <li>Verify Windows is fully patched.</li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+
+    <!-- LICENSE KEY / PRODUCT NUMBER -->
+    <section class="card" id="license-key" style="margin-top:14px;">
+      <h2>Find Your License Key / Product Number</h2>
+      <div class="body list">
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Find the license key inside QuickBooks (recommended)</summary>
+          <div class="content">
+            <ol>
+              <li>Open QuickBooks Desktop.</li>
+              <li>Press <b>F2</b> (or <b>Ctrl + 1</b>) to open <b>Product Information</b>.</li>
+              <li>Look for <b>License Number</b> and <b>Product Number</b> in that window.</li>
+            </ol>
+            <p class="muted">This works for Pro, Premier, and Enterprise.</p>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Find the license key from Windows Explorer (if QB won’t open)</summary>
+          <div class="content">
+            <p><b>Option A — QBRegistration.dat (most common):</b></p>
+            <ol>
+              <li>Close QuickBooks.</li>
+              <li>Open File Explorer and enable <b>Hidden items</b>.</li>
+              <li>Browse to:
+                <ul>
+                  <li><code class="inline">C:\ProgramData\Common Files\Intuit\QuickBooks\qbregistration.dat</code></li>
+                  <li>Some systems use: <code class="inline">C:\ProgramData\Intuit\QuickBooks\qbregistration.dat</code></li>
+                </ul>
+              </li>
+              <li>Right‑click → <b>Open with</b> → Notepad.</li>
+              <li>Search inside the file for <b>LicenseNumber</b> or <b>ProductNumber</b>.</li>
+            </ol>
+
+            <p><b>Option B — Entitlement Client folder (activation info):</b></p>
+            <ul>
+              <li><code class="inline">C:\ProgramData\Intuit\Entitlement Client\v8</code> (folder name varies by version)</li>
+            </ul>
+
+            <div class="note warn">
+              Don’t edit these files unless you’re following a specific repair step. Always back up first.
+            </div>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Command line / script method (unofficial, best-effort)</summary>
+          <div class="content">
+            <p>If you have admin rights, you can try a PowerShell scan to read the registration file.</p>
+            <pre style="white-space:pre-wrap; background:rgba(0,0,0,.35); padding:10px; border-radius:10px; border:1px solid var(--border);"><code>
+$paths = @(
+  "C:\ProgramData\Common Files\Intuit\QuickBooks\qbregistration.dat",
+  "C:\ProgramData\Intuit\QuickBooks\qbregistration.dat"
+)
+
+foreach ($p in $paths) {
+  if (Test-Path $p) {
+    Write-Host "Found: $p"
+    Select-String -Path $p -Pattern "LicenseNumber|ProductNumber|ValidationCode" -SimpleMatch
+  }
+}
+            </code></pre>
+            <p class="muted">
+              QuickBooks does not provide an official CLI for license retrieval, and file formats vary by version.
+              If this returns nothing, use the in‑program F2 method or your Intuit purchase email.
+            </p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- GUIDES -->
+    <section class="card" id="guides" style="margin-top:14px;">
+      <h2>How-To & Troubleshooting Guides</h2>
+      <div class="body list">
+
+        <details id="multiuser" class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Multi-User / Network errors (H202, H505, “can’t communicate with server”)</summary>
+          <div class="content">
+            <ol>
+              <li>Tool Hub → <b>Network Issues</b> → run <b>QuickBooks Database Server Manager</b>.</li>
+              <li>Verify hosting:
+                <ul>
+                  <li>Server: <b>Host Multi-User Access</b> = ON.</li>
+                  <li>Workstations: <b>Stop Hosting Multi-User Access</b> = ON.</li>
+                </ul>
+              </li>
+              <li>Ensure ports are open for your QB year and firewall exceptions exist.</li>
+              <li>Test opening the file from server local drive first, then workstation.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Slow performance, freezing, or crashing</summary>
+          <div class="content">
+            <ul>
+              <li>Update QuickBooks to latest release.</li>
+              <li>Tool Hub → <b>Program Problems</b> → <b>Quick Fix my Program</b>.</li>
+              <li>Verify & rebuild:
+                <ol>
+                  <li>File → Utilities → <b>Verify Data</b></li>
+                  <li>File → Utilities → <b>Rebuild Data</b> if needed</li>
+                </ol>
+              </li>
+              <li>Move file local to test network vs file issue.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details id="backup" class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Backup / Restore basics</summary>
+          <div class="content">
+            <ul>
+              <li>Create backup: File → Back Up Company → Create Local Backup.</li>
+              <li>Restore: File → Open or Restore Company → Restore a backup copy.</li>
+              <li>Keep rotating backups on separate storage.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details id="inis" class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>INI & key QuickBooks file locations (QBW.INI, Entitlements, Company Files)</summary>
+          <div class="content">
+            <p><b>QBW.INI (settings / troubleshooting):</b></p>
+            <ul>
+              <li>Typical path:
+                <code class="inline">C:\ProgramData\Intuit\QuickBooks [version]\QBW.INI</code></li>
+              <li>Older systems may store it under All Users / Application Data.</li>
+            </ul>
+
+            <p><b>Entitlement / license file:</b></p>
+            <ul>
+              <li><code class="inline">C:\ProgramData\Intuit\Entitlement Client\v8</code> (varies by version)</li>
+            </ul>
+
+            <p><b>Default Company File location:</b></p>
+            <ul>
+              <li><code class="inline">C:\Users\Public\Public Documents\Intuit\QuickBooks\Company Files</code></li>
+            </ul>
+
+            <div class="note warn">
+              Back up before editing INI or entitlement files.
+            </div>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>PDF / printing problems</summary>
+          <div class="content">
+            <ol>
+              <li>Tool Hub → <b>Program Problems</b> → <b>PDF & Print Repair Tool</b>.</li>
+              <li>Check Windows printer drivers and default printer.</li>
+              <li>Try “Print to Microsoft PDF”.</li>
+            </ol>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+
+    <!-- TECH TOOLKIT -->
+    <section class="card" id="tech-toolkit" style="margin-top:14px;">
+      <h2>Technician Toolkit (Quick Triage)</h2>
+      <div class="body list">
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>What to collect first (before changing anything)</summary>
+          <div class="content">
+            <ul>
+              <li><b>Exact error text</b> + screenshot + when it started.</li>
+              <li><b>QB version/year/edition</b> (F2 window if possible).</li>
+              <li><b>Single vs Multi-User</b> and where the file lives (local vs server share).</li>
+              <li><b>File size</b> and last successful open date.</li>
+              <li><b>Windows version</b> + recent OS updates or AV changes.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Safe “first fixes” order</summary>
+          <div class="content">
+            <ol>
+              <li>Update QuickBooks to latest release.</li>
+              <li>Tool Hub → <b>Quick Fix my Program</b>.</li>
+              <li>Tool Hub → <b>Quick Fix my File</b>.</li>
+              <li>File → Utilities → <b>Verify Data</b>, then <b>Rebuild</b> if needed.</li>
+              <li>Multi‑user: DB Server Manager rescan + hosting check.</li>
+              <li>If still failing: consider <b>Clean Install</b> or restore last good backup.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Quick “is it the file or the machine?” test</summary>
+          <div class="content">
+            <ol>
+              <li>Copy the company file to a local desktop folder.</li>
+              <li>Open locally in single‑user mode.</li>
+              <li>If it opens locally → likely network/permissions/hosting.</li>
+              <li>If it fails locally too → likely file damage, verify/rebuild/File Doctor needed.</li>
+            </ol>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- LOGS & PATHS -->
+    <section class="card" id="logs" style="margin-top:14px;">
+      <h2>Logs, Diagnostic Files & Common Paths</h2>
+      <div class="body list">
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Company file sidecar files (.TLG / .ND / .DSN)</summary>
+          <div class="content">
+            <ul>
+              <li><b>.TLG</b> (transaction log): rebuild helper; rename during repair if instructed.</li>
+              <li><b>.ND</b> (network descriptor): regenerated by DB Server Manager; rename to fix H‑series errors.</li>
+              <li><b>.DSN</b>: used by ODBC integrations; rare but can block connections if corrupt.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>QB program / install logs</summary>
+          <div class="content">
+            <ul>
+              <li><code class="inline">C:\ProgramData\Intuit\QuickBooks\Log\</code></li>
+              <li><code class="inline">C:\Users\Public\Documents\Intuit\QuickBooks\</code> (older builds)</li>
+              <li>Windows Event Viewer → Application / System logs can show .NET/MSXML/print errors.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Database Server Manager files (server)</summary>
+          <div class="content">
+            <ul>
+              <li><code class="inline">C:\Program Files\Intuit\QuickBooks DB Server Manager\</code></li>
+              <li><code class="inline">C:\ProgramData\Intuit\QuickBooks DB Server Manager\</code></li>
+              <li>Verify QuickBooksDBXX service is running (XX = year).</li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- CLEAN INSTALL -->
+    <section class="card" id="clean-install" style="margin-top:14px;">
+      <h2>Clean Install / Repair Playbook</h2>
+      <div class="body list">
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>When to use Clean Install</summary>
+          <div class="content">
+            <ul>
+              <li>Install errors persist after Diagnostic Tool.</li>
+              <li>QB crashes at launch even in “No Company Open”.</li>
+              <li>Program files/DLL errors like 80029c4a keep returning.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Clean Install steps (high level)</summary>
+          <div class="content">
+            <ol>
+              <li>Back up company files.</li>
+              <li>Uninstall QB from Control Panel.</li>
+              <li>Rename install folders (Tool Hub → Installation Issues → <b>Clean Install Tool</b>).</li>
+              <li>Reinstall from official download and update to latest release.</li>
+              <li>Re‑register with License/Product numbers.</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- WEB CONNECTOR -->
+    <section class="card" id="web-connector" style="margin-top:14px;">
+      <h2>Web Connector / Integration Issues</h2>
+      <div class="body list">
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>Common Web Connector errors (QBWC)</summary>
+          <div class="content">
+            <ul>
+              <li><b>QBWC1085</b>: stale user/config in web connector. Remove the app, close QBWC, reopen and re‑add.</li>
+              <li><b>0x800404xx</b>: permissions or app certificate mismatch. Re‑authorize the app inside QB.</li>
+              <li><b>“Password invalid” loops</b>: clear stored password in QBWC and re‑enter.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="filterable" data-version="all older 2020 2021 2022 2023 2024">
+          <summary>QBWC file locations</summary>
+          <div class="content">
+            <ul>
+              <li>QBWC executable: <code class="inline">C:\Program Files (x86)\Common Files\Intuit\QuickBooks\QBWebConnector\</code></li>
+              <li>Config/logs: <code class="inline">C:\ProgramData\Intuit\QBWebConnector\</code></li>
+              <li>User .QWC files are typically stored with the integration app or in user downloads.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- SHORTCUTS -->
+    <section class="card" id="shortcuts" style="margin-top:14px;">
+      <h2>QuickBooks Technician Shortcut Cheat Sheet</h2>
+      <div class="body">
+        <ul>
+          <li><b>F2</b> (or Ctrl+1): Product Information (version, license, file path)</li>
+          <li><b>Ctrl</b> while opening QB: Force “No Company Open”</li>
+          <li><b>F3</b>: Tech Help window (useful for some diagnostics)</li>
+          <li><b>Ctrl+Alt+Y</b>: Open transaction journal</li>
+          <li><b>Ctrl+R</b>: Refresh list windows/reports</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- HELP / CONTACT -->
+    <section class="card" id="contact" style="margin-top:14px;">
+      <h2>Help Notes & Escalation Space</h2>
+      <div class="body">
+        <p class="muted">Optional: add Sundance internal workflow here (ticket steps, call trees, SLAs).</p>
+        <ul>
+          <li><b>Capture exact error + screenshot.</b></li>
+          <li><b>Record environment:</b> QB year/edition, Windows version, single vs multi-user, file path.</li>
+          <li><b>Try safe steps first:</b> updates, Tool Hub quick fixes, verify/rebuild.</li>
+          <li><b>Escalate when:</b> rebuild fails, file won’t open after File Doctor, repeating crash at launch.</li>
+        </ul>
+      </div>
+    </section>
+  
+
+
+<section class="card" id="pdf-guides" style="margin-top:14px;">
+  <h2>PDF Guides (End‑User)</h2>
+  <div class="body">
+    <p class="muted">These PDFs live in the same GitHub folder (see /pdfs). Click to preview in a modal, then download or print.</p>
+
+    <div class="two-col">
+      <div>
+        <h3 style="margin-top:0;">Local guides (this repo)</h3>
+        <div class="list">
+          <button class="btn pdf-link"
+            data-pdf="pdfs/10%20QuickBooks%20SMB%20user%20manual-02.pdf"
+            data-title="QuickBooks SMB User Manual (alt copy)"
+            data-subtitle="Local PDF in this repo">
+            QuickBooks SMB User Manual (alt copy)
+          </button>
+
+          <button class="btn pdf-link"
+            data-pdf="pdfs/QuickBooks_SMB_user_manual-2022.pdf"
+            data-title="QuickBooks Online Business User Manual (2022)"
+            data-subtitle="Local Intuit manual">
+            QuickBooks Online Business User Manual (2022)
+          </button>
+
+          <button class="btn pdf-link"
+            data-pdf="pdfs/QuickBooks_Advanced_SMB_User_Manual-Jan24.pdf"
+            data-title="QuickBooks Online Advanced User Manual (Jan 2024)"
+            data-subtitle="Local Intuit Advanced manual">
+            QuickBooks Online Advanced User Manual (Jan 2024)
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin-top:0;">Official / reputable online PDFs</h3>
+        <div class="list">
+          <button class="btn pdf-link"
+            data-pdf="https://quickbooks.intuit.com/cas/dam/DOCUMENT/A8ugbvSbh/getting-started-qbo.pdf"
+            data-title="Getting Started with QuickBooks Online"
+            data-subtitle="Official Intuit PDF">
+            Getting Started with QuickBooks Online (Intuit PDF)
+          </button>
+
+          <button class="btn pdf-link"
+            data-pdf="https://http-download.intuit.com/http.intuit/CMO/quickbooks/2018/docs/QuickBooks_2018_User_Guide.pdf"
+            data-title="QuickBooks Desktop User Guide (2018)"
+            data-subtitle="Official Intuit Desktop guide">
+            QuickBooks Desktop User Guide (Intuit PDF)
+          </button>
+
+          <button class="btn pdf-link"
+            data-pdf="https://quickbooks.intuit.com/cas/dam/content/dam/intuit/sbseg/en_us/priority-circle/content/QBD-Level1-Manual-2021.pdf"
+            data-title="Mastering QuickBooks Desktop Level 1 Manual (2021)"
+            data-subtitle="Official Intuit training manual">
+            Mastering QuickBooks Desktop Level 1 (Training PDF)
+          </button>
+
+          <button class="btn pdf-link"
+            data-pdf="https://www.safehandsbookkeeping.com/wp-content/uploads/2025/05/SHBK-QUICKBOOKS-ONLINE-2025-BEGINNERS-GUIDE.pdf"
+            data-title="QuickBooks Online Beginner’s Guide (third‑party)"
+            data-subtitle="Unofficial third‑party guide">
+            QuickBooks Online Beginner’s Guide (third‑party PDF)
+          </button>
+        </div>
+
+        <p class="muted" style="margin-top:6px;">
+          Tip: Add more PDFs to /pdfs and copy one of the local buttons, changing only the filename.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+</main>
+
+  <footer class="wrap">
+    <div class="tag">Tip</div>
+    Search filters everything on this page. Version Picker filters year-specific items too.
+  </footer>
+
+  <script>
+    // --- Keyboard focus for search
+    const searchInput = document.getElementById('searchInput');
+    document.addEventListener('keydown', (e)=>{
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+        e.preventDefault(); searchInput.focus(); searchInput.select();
+      }
+    });
+
+    // --- Search filter
+    const filterables = Array.from(document.querySelectorAll('.filterable, details'));
+    const originalSummaries = filterables.map(d => d.querySelector?.('summary')?.textContent || d.textContent);
+
+    function normalize(s){ return (s||"").toLowerCase().trim(); }
+
+    function applySearchFilter(){
+      const q = normalize(searchInput.value);
+      filterables.forEach((d, i)=>{
+        const txt = normalize(d.textContent);
+        const show = !q || txt.includes(q) || normalize(originalSummaries[i]).includes(q);
+        d.style.display = show ? '' : 'none';
+        if (!show && d.tagName === 'DETAILS') d.open = false;
+      });
+    }
+
+    searchInput.addEventListener('input', applySearchFilter);
+
+    // --- Version picker filter
+    const versionSelect = document.getElementById('versionSelect');
+    const versionChip = document.getElementById('versionChip');
+    const versionNotes = document.getElementById('versionNotes');
+    const versionTargets = Array.from(document.querySelectorAll('[data-version]'));
+
+    const notesByVersion = {
+      all: "Showing all guidance. Pick a year for more targeted fixes.",
+      "2024": "2024 notes: prefer Tool Hub for repairs; ensure latest release installed.",
+      "2023": "2023 notes: multi-user issues often fixed via DB Server Manager rescan.",
+      "2022": "2022 notes: watch for .NET/MSXML repair if install/update errors appear.",
+      "2021": "2021 notes: older Windows builds may need TLS 1.2 enabled for updates.",
+      "2020": "2020 notes: consider local file test if network latency is high.",
+      older: "2019 & older: some tools/patches may be limited; reinstall + manual updates often required."
+    };
+
+    function applyVersionFilter(){
+      const v = versionSelect.value;
+      versionChip.textContent = "Showing: " + (v === "all" ? "All Versions" : v);
+      versionNotes.textContent = notesByVersion[v] || notesByVersion.all;
+
+      versionTargets.forEach(el=>{
+        const versions = el.getAttribute('data-version').split(/\s+/);
+        const show = (v === "all") || versions.includes(v) || versions.includes("all");
+        el.classList.toggle('hidden', !show);
+        if (!show && el.tagName === 'DETAILS') el.open = false;
+      });
+
+      // re-apply search after version changes
+      applySearchFilter();
+    }
+
+    versionSelect.addEventListener('change', applyVersionFilter);
+    applyVersionFilter();
+
+    // --- Iframe fallback if blocked
+    const iframe = document.getElementById('qbDownloadsIframe');
+    const fallback = document.getElementById('iframeFallback');
+
+    let iframeCheck = setTimeout(()=>{
+      try{
+        const h = iframe.contentWindow?.document?.body?.scrollHeight;
+        if (!h) fallback.style.display = 'block';
+      }catch(err){
+        // Cross origin access error implies it did load; no fallback needed.
+      }
+    }, 2500);
+
+
+    // --- Tool Hub "Direct Download" safe resolver
+    // Browsers can't reliably scrape Intuit's page for the rotating .exe link because of CORS
+    // and Intuit often changes the installer URL. So:
+    // 1) If a global TOOLHUB_LATEST_URL is provided (e.g., by your internal server), we use it.
+    // 2) Else, we fall back to the official Intuit Tool Hub page.
+    const toolHubDirectBtn = document.getElementById('toolHubDirectBtn');
+    if (toolHubDirectBtn){
+      toolHubDirectBtn.addEventListener('click', (e)=>{
+        const latest = window.TOOLHUB_LATEST_URL;
+        if (latest && typeof latest === 'string' && /^https:\/\/.*intuit\.com\/|^https:\/\/http-download\.intuit\.com\//i.test(latest)){
+          toolHubDirectBtn.href = latest; // allowlist Intuit domains only
+        } else {
+          toolHubDirectBtn.href = "https://quickbooks.intuit.com/learn-support/en-us/install/quickbooks-tool-hub/00/1544247";
+        }
+      });
+    }
+
+    iframe.addEventListener('error', ()=>{
+      fallback.style.display = 'block';
+      clearTimeout(iframeCheck);
+    });
+  
